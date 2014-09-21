@@ -1,0 +1,13 @@
+{application, home_automation,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib,
+                  sasl
+                 ]},
+  {mod, { home_automation_app, []}},
+  {env, []}
+ ]}.

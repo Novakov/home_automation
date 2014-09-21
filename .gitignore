@@ -1,0 +1,8 @@
+*.swp
+
+erl_crash.dump
+
+firmware/.idea
+firmware/.rebar
+firmware/ebin
+firmware/deps
