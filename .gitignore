@@ -9,3 +9,5 @@ firmware/ebin
 #firmware/deps
 
 !firmware/deps/erlhw/ebin
+
+firmware/public/components

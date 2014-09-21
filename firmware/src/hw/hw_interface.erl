@@ -6,7 +6,7 @@
 %% API Function Exports
 %% ------------------------------------------------------------------
 
--export([start_link/0, green_led/1]).
+-export([start_link/0, green_led/1, green_led/0]).
 
 %% ------------------------------------------------------------------
 %% gen_server Function Exports
@@ -26,6 +26,12 @@ start_link() ->
 
   {ok, Pid}.
 
+green_led() ->
+  case gen_server:call({global, ?SERVER}, {green_led, ask}) of
+    1 -> off;
+    0 -> on
+  end.
+
 green_led(on) ->
   gen_server:call({global, ?SERVER}, {green_led, on});
 
@@ -38,6 +44,10 @@ green_led(off) ->
 init(Args) ->
     ok = gpio:set_int(?BTN_PIN, rising),
     {ok, Args}.
+
+handle_call({green_led, ask}, _From, State) ->
+  Status = gpio:read(?GREEN_LED_PIN),
+  {reply, Status, State};
 
 handle_call({green_led, LedState}, _From, State) ->
     gpio:write(?GREEN_LED_PIN, onOff(LedState)),
