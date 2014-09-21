@@ -3,7 +3,7 @@
 -behaviour(supervisor).
 
 %% API
--export([start_link/0, gpio_sup_spec/0]).
+-export([start_link/0]).
 
 %% Supervisor callbacks
 -export([init/1]).
@@ -20,31 +20,15 @@ start_link() ->
 %% Supervisor callbacks
 %% ===================================================================
 
-gpio_sup_spec() ->
-  GpioSpec = [
-    {21, output}
-  ],
-  {gpio,
-    {gpio_sup, start_link, [GpioSpec]},
-    permanent, 5000, worker, [gpio_sup]
-  }.
-
 init([]) ->
-  GpioSpec = [
-    {21, output}
-  ],
   {
     ok,
     {
       {one_for_all, 5, 60},
       [
-        {gpio,
-          {gpio_sup, start_link, [GpioSpec]},
-          permanent, 5000, worker, [gpio_sup]
-        },
-        {pio,
-          {pio, start_link, []},
-          permanent, 5000, worker, [pio]
+        {hw_interface_sup,
+          {hw_interface_sup, start_link, []},
+          permanent, 5000, supervisor, [hw_interface_sup]
         }
       ]
     }
