@@ -60,7 +60,8 @@ init([]) ->
   Shutdown = 2000,
 
   GpioSpec = [
-    {?GREEN_LED_PIN, output}
+    {?GREEN_LED_PIN, output},
+    {?BTN_PIN, input}
   ],
 
   GpioSupChild =

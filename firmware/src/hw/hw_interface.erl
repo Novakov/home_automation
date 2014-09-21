@@ -36,7 +36,7 @@ green_led(off) ->
 %% ------------------------------------------------------------------
 
 init(Args) ->
-  error_logger:info_msg("Initializing hw_interface!!!!!~n"),
+    ok = gpio:set_int(?BTN_PIN, rising),
     {ok, Args}.
 
 handle_call({green_led, LedState}, _From, State) ->
@@ -53,7 +53,11 @@ handle_call(Msg, _From, State) ->
 handle_cast(_Msg, State) ->
     {noreply, State}.
 
+handle_info({gpio_interrupt,?BTN_PIN, rising}, _State) ->
+  error_logger:info_msg("Rising edge!"),
+  {noreply, _State};
 handle_info(_Info, State) ->
+  error_logger:info_msg("Unknown msg ~p!", [_Info]),
     {noreply, State}.
 
 terminate(_Reason, _State) ->

@@ -10,3 +10,4 @@
 
 
 -define(GREEN_LED_PIN, 21).
+-define(BTN_PIN, 20).
