@@ -9,5 +9,6 @@
                   sasl
                  ]},
   {mod, { home_automation_app, []}},
-  {env, []}
+  {env, [
+    {modes, [hw, web]}]}
  ]}.

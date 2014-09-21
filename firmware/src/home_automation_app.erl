@@ -12,7 +12,11 @@
 start(_StartType, _StartArgs) ->
     error_logger:info_msg("Starting!"),
 
-    home_automation_sup:start_link().
+    {ok, Modes} = application:get_env(modes),
+
+    error_logger:info_msg("Running with modes ~p~n", [Modes]),
+
+    home_automation_sup:start_link(Modes).
 
 stop(_State) ->
     ok.

@@ -36,6 +36,7 @@ green_led(off) ->
 %% ------------------------------------------------------------------
 
 init(Args) ->
+  error_logger:info_msg("Initializing hw_interface!!!!!~n"),
     {ok, Args}.
 
 handle_call({green_led, LedState}, _From, State) ->
@@ -56,6 +57,7 @@ handle_info(_Info, State) ->
     {noreply, State}.
 
 terminate(_Reason, _State) ->
+  error_logger:info_msg("Terminaing hw_interface Reason ~p!!!!!~n", [_Reason]),
     ok.
 
 code_change(_OldVsn, State, _Extra) ->
