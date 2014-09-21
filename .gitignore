@@ -2,7 +2,10 @@
 
 erl_crash.dump
 
+
 firmware/.idea
 firmware/.rebar
 firmware/ebin
-firmware/deps
+#firmware/deps
+
+!firmware/deps/erlhw/ebin
