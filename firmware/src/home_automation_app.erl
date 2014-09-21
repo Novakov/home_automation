@@ -10,8 +10,6 @@
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
-    error_logger:info_msg("Starting!"),
-
     {ok, Modes} = application:get_env(modes),
 
     error_logger:info_msg("Running with modes ~p~n", [Modes]),

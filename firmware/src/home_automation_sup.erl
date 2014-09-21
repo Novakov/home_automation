@@ -14,7 +14,7 @@
 %% ===================================================================
 
 start_link(Modes) ->
-    supervisor:start_link({local, ?MODULE}, ?MODULE, [Modes]).
+    supervisor:start_link({local, ?MODULE}, ?MODULE, Modes).
 
 %% ===================================================================
 %% Supervisor callbacks
@@ -28,12 +28,17 @@ child_specs([hw|Rest]) ->
   [HwInterfaceSpec|child_specs(Rest)];
 
 child_specs([web|Rest]) ->
-  child_specs(Rest);
+  WebSpec = {web_sup,
+    {web_sup, start_link, []},
+    permanent, 5000, supervisor, [web_sup]
+  },
+  [WebSpec|child_specs(Rest)];
 
 child_specs([]) ->
   [].
 
 init(Modes) ->
+  error_logger:info_msg("Running with modes ~p~n", [Modes]),
   {
     ok,
     {
