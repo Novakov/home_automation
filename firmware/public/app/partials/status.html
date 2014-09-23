@@ -9,6 +9,7 @@
             </div>
         </div>
     </p>
+
     <p>
         <div class="col-lg-7">
             <h3>Disk usage</h3>
@@ -18,6 +19,18 @@
                     <span>{{disk.id}} {{disk.ratio*100}}% ({{disk.used.toFixed(0)}} of {{disk.size.toFixed(0)}} GB)</span>
                 </div>
             </div>
+        </div>
+    </p>
+
+    <p>
+        <div class="col-lg-7">
+            <h3>Running applications</h3>
+            <ul>
+                <li ng-repeat="app in applications">
+                    <div><strong>{{app.name}} {{app.version}}</strong></div>
+                    <small class="small">{{app.description}}</small>
+                </li>
+            </ul>
         </div>
     </p>
 </div>

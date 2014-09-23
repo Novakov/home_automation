@@ -8,6 +8,7 @@ angular.module('HomeAutomation.Controllers')
         };
 
         $scope.disks = [];
+        $scope.applications = [];
 
         $http.get('/vm/status').success(function (data) {
             var oneKileByte = 1 * 1024;
@@ -23,8 +24,10 @@ angular.module('HomeAutomation.Controllers')
                     id: item.id,
                     size: item.size * oneKileByte / oneGigaByte,
                     used: item.size * oneKileByte * (item.used / 100) / oneGigaByte,
-                    ratio: item.used/100
+                    ratio: item.used / 100
                 }
             });
+
+            $scope.applications = data.applications;
         });
     });

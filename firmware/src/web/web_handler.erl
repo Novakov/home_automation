@@ -24,6 +24,8 @@ handle(Req, 'POST', ["green", "off"]) ->
 handle(Req, 'GET', ["vm", "status"]) ->
   {Total, Allocated,_} = memsup:get_memory_data(),
   Disks = disksup:get_disk_data(),
+  Applications = application:which_applications(),
+
   Status = [
     {memory,
       [
@@ -40,8 +42,19 @@ handle(Req, 'GET', ["vm", "status"]) ->
         ]
         || {Id, Size, Used} <- Disks
       ]
+    },
+    {applications,
+      [
+        [
+          {name, Name},
+          {description, list_to_binary(Description)},
+          {version, list_to_binary(Version)}
+        ]
+        || {Name, Description, Version} <- Applications
+      ]
     }
   ],
+
   json(Status);
 
 handle(_,_,_) -> none.
