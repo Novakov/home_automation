@@ -1,5 +1,10 @@
 ﻿'use strict';
 
+angular.module('HomeAutomation.Controllers')
+    .controller('RootController', function() {
+
+    });
+
 angular.module('HomeAutomation', ['HomeAutomation.Controllers', 'ngRoute'])
     .config(function ($routeProvider) {
     $routeProvider

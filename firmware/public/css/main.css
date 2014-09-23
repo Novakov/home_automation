@@ -6,3 +6,12 @@
         font-size: 13px;
         line-height: 21px;
     }
+
+
+#date-time {
+    text-align: right;
+}
+
+#disk-usage-status .progress-bar {
+    min-width: 20%;
+}

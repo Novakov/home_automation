@@ -40,7 +40,7 @@ handle(Req, 'GET', ["vm", "status"]) ->
           {size, Size},
           {used, Used}
         ]
-        || {Id, Size, Used} <- Disks
+        || {Id, Size, Used} <- Disks, Size > 0, Used > 0
       ]
     },
     {applications,
@@ -56,5 +56,9 @@ handle(Req, 'GET', ["vm", "status"]) ->
   ],
 
   json(Status);
+
+handle(_Req, 'GET', ["now"]) ->
+  IsoDate = iso8601:format(now()),
+  json([{date, IsoDate}]);
 
 handle(_,_,_) -> none.
