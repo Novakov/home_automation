@@ -1,0 +1,23 @@
+﻿<div class="container-fluid">
+    <p>
+        <div class="col-lg-7">
+            <h3>Memory</h3>
+            <div class="progress">
+                <div class="progress-bar" data-ng-style="{width: memory.ratio * 100 + '%'}">
+                    <span>{{(memory.ratio * 100).toFixed(0)}}% ({{memory.allocated.toFixed(0)}} of {{memory.total.toFixed(0)}}MB)</span>
+                </div>
+            </div>
+        </div>
+    </p>
+    <p>
+        <div class="col-lg-7">
+            <h3>Disk usage</h3>
+
+            <div class="progress" ng-repeat="disk in disks">
+                <div class="progress-bar" data-ng-style="{width: disk.ratio * 100 + '%'}">
+                    <span>{{disk.id}} {{disk.ratio*100}}% ({{disk.used.toFixed(0)}} of {{disk.size.toFixed(0)}} GB)</span>
+                </div>
+            </div>
+        </div>
+    </p>
+</div>

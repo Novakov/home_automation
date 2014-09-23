@@ -21,4 +21,27 @@ handle(Req, 'POST', ["green", "off"]) ->
   hw_interface:green_led(off),
   text("OK");
 
+handle(Req, 'GET', ["vm", "status"]) ->
+  {Total, Allocated,_} = memsup:get_memory_data(),
+  Disks = disksup:get_disk_data(),
+  Status = [
+    {memory,
+      [
+        {total, Total},
+        {allocated, Allocated}
+      ]
+    },
+    {disks,
+      [
+        [
+          {id, list_to_binary(Id)},
+          {size, Size},
+          {used, Used}
+        ]
+        || {Id, Size, Used} <- Disks
+      ]
+    }
+  ],
+  json(Status);
+
 handle(_,_,_) -> none.

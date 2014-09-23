@@ -1,16 +1,17 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Home automation</title>
-    <link href="components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Home automation</title>    
+    <link href="components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />    
     <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/main.css" rel="stylesheet" />
 </head>
 <body ng-app="HomeAutomation">
     <div class="container-fluid">
         <div>
             <ul class="nav nav-tabs" ng-controller="NavController">
                 <li ng-class="{active: isActive('/led')}"><a href="#led">Green LED</a></li>
-                <li class=""><a href="#dupa">Dupa</a></li>
+                <li ng-class="{active: isActive('/status')}"><a href="#status">Status</a></li>
             </ul>
             <div id="view" class="tab-content tab" ng-view>                
             </div>
@@ -26,6 +27,7 @@
     <script src="app/controllers/module.js"></script>
     <script src="app/controllers/NavController.js"></script>
     <script src="app/controllers/LedController.js"></script>    
+    <script src="app/controllers/StatusController.js"></script>    
     <script src="app/app.js"></script>
 </body>
 </html>
