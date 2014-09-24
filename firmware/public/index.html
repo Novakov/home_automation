@@ -4,6 +4,7 @@
     <title>Home automation</title>    
     <link href="components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />    
     <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="components/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet"/>
     <link href="css/main.css" rel="stylesheet" />
 </head>
 <body ng-app="HomeAutomation">
@@ -15,6 +16,7 @@
             <ul class="nav nav-tabs" ng-controller="NavController">
                 <li ng-class="{active: isActive('/led')}"><a href="#led">Green LED</a></li>
                 <li ng-class="{active: isActive('/status')}"><a href="#status">Status</a></li>
+                <li ng-class="{active: isActive('/calendar')}"><a href="#calendar">Calendar</a></li>
             </ul>
             <div id="view" class="tab-content tab" ng-view>                
             </div>
@@ -26,12 +28,17 @@
     <script src="components/jquery/dist/jquery.min.js"></script>
     <script src="components/angular/angular.min.js"></script>
     <script src="components/angular-route/angular-route.min.js"></script>
+    <script src="components/jquery-ui/jquery-ui.min.js"></script>
+    <script src="components/moment/min/moment.min.js"></script>
+    <script src="components/fullcalendar/dist/fullcalendar.min.js"></script>
+    <script src="components/angular-ui-calendar/src/calendar.js"></script>
     
     <script src="app/controllers/module.js"></script>
     <script src="app/controllers/NavController.js"></script>
     <script src="app/controllers/LedController.js"></script>    
     <script src="app/controllers/StatusController.js"></script>    
     <script src="app/controllers/CornerController.js"></script>    
+    <script src="app/controllers/CalendarController.js"></script>    
     <script src="app/app.js"></script>
 </body>
 </html>

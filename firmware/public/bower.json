@@ -1,25 +1,32 @@
 {
-    "name": "HomeAutomation",
-    "version": "0.0.0",
-    "homepage": "https://github.com/Novakov/home_automation",
-    "authors": [
-        "Maciej Nowak <maciejt.nowak@gmail.com>"
-    ],
-    "moduleType": [
-        "amd"
-    ],
-    "license": "Apache 2.0",
-    "private": true,
-    "ignore": [
-        "**/.*",
-        "node_modules",
-        "bower_components",
-        "test",
-        "tests"
-    ],
-    "dependencies": {
-        "bootstrap": "3.2.0",
-        "angular": "1.2.25",
-        "angular-route": "1.2.25"
-    }
+  "name": "HomeAutomation",
+  "version": "0.0.0",
+  "homepage": "https://github.com/Novakov/home_automation",
+  "authors": [
+    "Maciej Nowak <maciejt.nowak@gmail.com>"
+  ],
+  "moduleType": [
+    "amd"
+  ],
+  "license": "Apache 2.0",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "3.2.0",
+    "angular": "1.2.25",
+    "angular-route": "1.2.25",
+    "jquery-ui": "1.11.1",
+    "angular-ui-calendar": "0.8.1"
+  },
+  "resolutions": {
+    "jquery": "~2.x",
+    "jquery-ui": "1.11.1",
+    "fullcalendar": "2.1.1"
+  }
 }

@@ -15,3 +15,22 @@
 #disk-usage-status .progress-bar {
     min-width: 20%;
 }
+
+
+.calendar td {
+    border: thin lightgray solid;
+}
+
+.calendar .hour-row {
+    height: 40px;
+}
+
+.event {
+    background-color: red;
+    z-index: 1;
+    position: absolute;    
+}
+
+.fc-event {
+    text-decoration: none !important;
+}

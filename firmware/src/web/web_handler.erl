@@ -61,4 +61,19 @@ handle(_Req, 'GET', ["now"]) ->
   IsoDate = iso8601:format(now()),
   json([{date, IsoDate}]);
 
+handle(_Req, 'GET', ["events"]) ->
+  Events = [
+    make_event({{2014, 09, 22}, {12,0,0}}, {{2014, 09, 22}, {14,0,0}}),
+    make_event({{2014, 09, 22}, {13,30,0}}, {{2014, 09, 22}, {17,0,0}})
+  ],
+  json(Events);
+
 handle(_,_,_) -> none.
+
+
+make_event(Start, End) ->
+  [
+    {title, <<"">>},
+    {start, iso8601:format(Start)},
+    {'end', iso8601:format(End)}
+  ].
