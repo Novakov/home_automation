@@ -63,26 +63,26 @@ handle(_Req, 'GET', ["now"]) ->
   IsoDate = iso8601:format(now()),
   json([{date, IsoDate}]);
 
-handle(_Req, 'GET', ["events"]) ->
-  Events = [
-    make_event({{2014, 09, 22}, {12,0,0}}, {{2014, 09, 22}, {14,0,0}}),
-    make_event({{2014, 09, 22}, {13,30,0}}, {{2014, 09, 22}, {17,0,0}})
-  ],
-  json(Events);
+handle(Req, 'GET', ["events"]) ->
+  QS = Req:parse_qs(),
 
-handle(_Req, 'GET', ["db"]) ->
-  Sql = "select id, name from test",
-  Result = emysql:execute(db, Sql),
-  Rows = emysql_util:as_record(Result, test_row, record_info(fields, test_row)),
-  Json = [
-    [
-      {id, X#test_row.id},
-      {name, X#test_row.name}
-    ]
-    || X <- Rows
-  ],
+  From = iso8601:parse(proplists:get_value("from", QS)),
+  To = iso8601:parse(proplists:get_value("to", QS)),
+  Events = domain_events:get_events_for_date_range(From, To),
+  json(utils:rewrite_datetime_in_proplist(Events));
 
-  json(Json);
+handle(Req, 'POST', ["events", "new"]) ->
+  Input = jsx:decode(Req:recv_body()),
+  P = fun (Name) -> proplists:get_value(Name, Input) end,
+  Event = domain_events:define_single_event(
+    P(<<"target">>),
+    iso8601:parse(P(<<"from">>)),
+    iso8601:parse(P(<<"to">>))
+  ),
+
+  ok = domain_events:save_event(Event),
+
+  json([{result, <<"OK">>}]);
 
 handle(_,_,_) -> none.
 

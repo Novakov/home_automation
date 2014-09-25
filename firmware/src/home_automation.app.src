@@ -1,6 +1,6 @@
 {application, home_automation,
  [
-  {description, ""},
+  {description, "Home automation system"},
   {vsn, "1"},
   {registered, []},
   {applications, [
