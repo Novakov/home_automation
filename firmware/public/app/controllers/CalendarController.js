@@ -6,7 +6,7 @@ angular.module('HomeAutomation.Controllers')
             url: '/events',
             eventDataTransform: function (e) {
                 return {
-                    id: e.id,
+                    id: e.series_id,
                     start: e.from,
                     end: e.to
                 }                
@@ -28,7 +28,7 @@ angular.module('HomeAutomation.Controllers')
 
             $http.post('/events/new', newEvent).success(function (result) {                                
                 $scope.calendar.fullCalendar('unselect');
-                $scope.calendar.fullCalendar('refetchEvents');
+                //$scope.calendar.fullCalendar('refetchEvents');
             });
         };
 

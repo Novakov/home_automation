@@ -6,24 +6,24 @@
 
 -import(respond, [text/1, file/1, json/1]).
 
--record(test_row, {id, name}).
+-include("events.hrl").
 
-handle(Req, 'GET', []) ->
+handle(_Req, 'GET', []) ->
   respond:file("index.html");
 
-handle(Req, 'GET', ["green"]) ->
+handle(_Req, 'GET', ["green"]) ->
   Status = hw_interface:green_led(),
   json([{status, Status}]);
 
-handle(Req, 'POST', ["green", "on"]) ->
+handle(_Req, 'POST', ["green", "on"]) ->
   hw_interface:green_led(on),
   text("OK");
 
-handle(Req, 'POST', ["green", "off"]) ->
+handle(_Req, 'POST', ["green", "off"]) ->
   hw_interface:green_led(off),
   text("OK");
 
-handle(Req, 'GET', ["vm", "status"]) ->
+handle(_Req, 'GET', ["vm", "status"]) ->
   {Total, Allocated,_} = memsup:get_memory_data(),
   Disks = disksup:get_disk_data(),
   Applications = application:which_applications(),
@@ -68,8 +68,12 @@ handle(Req, 'GET', ["events"]) ->
 
   From = iso8601:parse(proplists:get_value("from", QS)),
   To = iso8601:parse(proplists:get_value("to", QS)),
+
   Events = domain_events:get_events_for_date_range(From, To),
-  json(utils:rewrite_datetime_in_proplist(Events));
+
+  Proplist = [ utils:record_as_proplist(X, record_info(fields, event_occurence)) || X <- Events ],
+
+  json(utils:rewrite_datetime_in_proplist(Proplist));
 
 handle(Req, 'POST', ["events", "new"]) ->
   Input = jsx:decode(Req:recv_body()),
@@ -85,11 +89,3 @@ handle(Req, 'POST', ["events", "new"]) ->
   json([{result, <<"OK">>}]);
 
 handle(_,_,_) -> none.
-
-
-make_event(Start, End) ->
-  [
-    {title, <<"">>},
-    {start, iso8601:format(Start)},
-    {'end', iso8601:format(End)}
-  ].
