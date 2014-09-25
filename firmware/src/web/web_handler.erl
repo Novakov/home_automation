@@ -6,6 +6,8 @@
 
 -import(respond, [text/1, file/1, json/1]).
 
+-record(test_row, {id, name}).
+
 handle(Req, 'GET', []) ->
   respond:file("index.html");
 
@@ -67,6 +69,20 @@ handle(_Req, 'GET', ["events"]) ->
     make_event({{2014, 09, 22}, {13,30,0}}, {{2014, 09, 22}, {17,0,0}})
   ],
   json(Events);
+
+handle(_Req, 'GET', ["db"]) ->
+  Sql = "select id, name from test",
+  Result = emysql:execute(db, Sql),
+  Rows = emysql_util:as_record(Result, test_row, record_info(fields, test_row)),
+  Json = [
+    [
+      {id, X#test_row.id},
+      {name, X#test_row.name}
+    ]
+    || X <- Rows
+  ],
+
+  json(Json);
 
 handle(_,_,_) -> none.
 

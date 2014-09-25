@@ -14,6 +14,8 @@ start(_StartType, _StartArgs) ->
 
     error_logger:info_msg("Running with modes ~p~n", [Modes]),
 
+    ok = emysql:add_pool(db, 1, "root", "root", "localhost", 3306, "home_automation", utf8),
+
     home_automation_sup:start_link(Modes).
 
 stop(_State) ->

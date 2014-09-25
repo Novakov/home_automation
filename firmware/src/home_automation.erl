@@ -13,4 +13,6 @@
 -export([start/0]).
 
 start() ->
+  application:start(crypto),
+  application:start(emysql),
   application:start(home_automation).
