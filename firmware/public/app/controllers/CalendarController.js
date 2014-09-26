@@ -8,7 +8,8 @@ angular.module('HomeAutomation.Controllers')
                 return {
                     id: e.series_id,
                     start: e.from,
-                    end: e.to
+                    end: e.to,
+                    icons: ['']
                 }
             }
         };
@@ -36,6 +37,20 @@ angular.module('HomeAutomation.Controllers')
             });
         };
 
+        $scope.eventRender = function (event, element, view) {
+            var html = '<span class="icons">';
+
+            if (event.icons != undefined) {
+                for (var idx in event.icons) {
+                    html += '<span class="glyphicon glyphicon-' + event.icons[idx] + '"></span>';
+                }
+            }
+
+            html += '</span>';
+            
+            element.find(".fc-time span").after($(html));
+        };
+
         $scope.uiConfig = {
             calendar: {
                 defaultView: 'agendaWeek',
@@ -51,9 +66,11 @@ angular.module('HomeAutomation.Controllers')
                 axisFormat: { 'agenda': 'H:mm' },
                 timeFormat: 'H:mm',
 
-                select: $scope.addNewEvent,
                 startParam: 'from',
-                endParam: 'to'
+                endParam: 'to',
+
+                select: $scope.addNewEvent,
+                eventRender: $scope.eventRender
             }
         };
     });

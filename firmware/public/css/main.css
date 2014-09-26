@@ -35,6 +35,8 @@
     text-decoration: none !important;
 }
 
-/*.fc-highlight {
-    opacity: 1;
-}*/
+.fc-event .icons {
+    float: right;
+    padding-right: 2px;
+    padding-top: 2px;
+}
