@@ -11,10 +11,11 @@
 
 start(_StartType, _StartArgs) ->
     {ok, Modes} = application:get_env(modes),
+    {ok, DbServer} = application:get_env(dbserver),
 
     error_logger:info_msg("Running with modes ~p~n", [Modes]),
 
-    ok = emysql:add_pool(db, 1, "root", "root", "localhost", 3306, "home_automation", utf8),
+    ok = emysql:add_pool(db, 1, "root", "root", DbServer, 3306, "home_automation", utf8),
 
     home_automation_sup:start_link(Modes).
 

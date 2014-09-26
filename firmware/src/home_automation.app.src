@@ -10,5 +10,7 @@
                  ]},
   {mod, { home_automation_app, []}},
   {env, [
-    {modes, [hw, web]}]}
+    {modes, [hw, web]}],
+    {dbserver, "localhost"}
+  }
  ]}.
