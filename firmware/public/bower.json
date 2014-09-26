@@ -21,12 +21,14 @@
     "bootstrap": "3.2.0",
     "angular": "1.2.25",
     "angular-route": "1.2.25",
-    "jquery-ui": "1.11.1",
-    "angular-ui-calendar": "0.8.1"
+    "angular-ui-calendar": "0.8.1",   
+    "angular-bootstrap": "0.11.0",
+    "moment": "2.8.3",
+    "fullcalendar": "2.1.1",
+    "bootstrap-timepicker":  "0.2.6"
   },
   "resolutions": {
     "jquery": "~2.x",
-    "jquery-ui": "1.11.1",
     "fullcalendar": "2.1.1"
   }
 }

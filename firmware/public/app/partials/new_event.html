@@ -1,0 +1,27 @@
+﻿<div class="modal-header">
+    <h3 class="modal-title">New event</h3>
+</div>
+<div class="modal-body">   
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="input-group">
+                <input type="text" class="form-control"
+                       datepicker-popup="yyyy-MM-dd"
+                       is-open="$parent.opened"
+                       ng-model="start_at"
+                       datepicker-options="dateOptions"
+                       show-button-bar="false" />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            
+        </div>
+    </div>       
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()">OK</button>
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

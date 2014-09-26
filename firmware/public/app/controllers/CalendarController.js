@@ -1,7 +1,7 @@
 ﻿'use strict';
 
 angular.module('HomeAutomation.Controllers')
-    .controller('CalendarController', function ($scope, $http) {
+    .controller('CalendarController', function ($scope, $http, $modal) {
         $scope.eventSources = {
             url: '/events',
             eventDataTransform: function (e) {
@@ -9,26 +9,22 @@ angular.module('HomeAutomation.Controllers')
                     id: e.series_id,
                     start: e.from,
                     end: e.to
-                }                
+                }
             }
         };
 
         $scope.addNewEvent = function (start, end) {
-            var event = {
-                title: '',
-                start: start,
-                end: end
-            };
+            var modalInstance = $modal.open({
+                templateUrl: 'app/partials/new_event.html',
+                controller: NewEventController,
+                resolve: {
+                    start_at: function () { return start; },
+                    end_at: function () { return end; }
+                }
+            });
 
-            var newEvent = {
-                target: 'water',
-                from: start,
-                to: end
-            };
-
-            $http.post('/events/new', newEvent).success(function (result) {                                
-                $scope.calendar.fullCalendar('unselect');
-                //$scope.calendar.fullCalendar('refetchEvents');
+            modalInstance.result.then(function () {
+               
             });
         };
 
@@ -42,14 +38,46 @@ angular.module('HomeAutomation.Controllers')
                 selectable: true,
                 selectHelper: true,
                 columnFormat: {
-                    week: 'D.MM dddd'
+                    week: 'd.MM dddd'
                 },
                 axisFormat: { 'agenda': 'H:mm' },
                 timeFormat: 'H:mm',
 
                 select: $scope.addNewEvent,
                 startParam: 'from',
-                endParam: 'to'                
+                endParam: 'to'
             }
         };
     });
+
+var NewEventController = function ($scope, $modalInstance, start_at, end_at) {
+    $scope.start_at = new Date();
+    $scope.end_at = end_at;
+
+    $scope.opened = false;
+
+    $scope.ok = function() {
+        $modalInstance.close();
+    };
+    $scope.cancel = function() {
+        $modalInstance.dismiss('cancel');
+    };
+
+    $scope.open = function ($event) {        
+        $event.preventDefault();
+        $event.stopPropagation();
+        
+        $scope.opened = true;
+        console.log('.');
+    };
+
+    $scope.dateOptions = {
+        formatYear: 'yy',
+        startingDay: 1,
+        "show-weeks": false
+    };
+
+    $scope.datePopupOptions = {
+        "show-button-bar":false
+    };
+};
