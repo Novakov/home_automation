@@ -18,13 +18,21 @@ angular.module('HomeAutomation.Controllers')
                 templateUrl: 'app/partials/new_event.html',
                 controller: NewEventController,
                 resolve: {
-                    start_at: function () { return start; },
-                    end_at: function () { return end; }
+                    start_at: function () { return start.local().toDate(); },
+                    end_at: function () { return end.local().toDate(); }
                 }
             });
 
-            modalInstance.result.then(function () {
-               
+            modalInstance.result.then(function (event) {
+                var data = {
+                    from: event.start,
+                    to: event.end,
+                    target: "water"
+                };                
+
+                $http.post('/events/new', data).success(function() {
+                    $scope.calendar.fullCalendar('refetchEvents');
+                });
             });
         };
 
@@ -51,26 +59,38 @@ angular.module('HomeAutomation.Controllers')
     });
 
 var NewEventController = function ($scope, $modalInstance, start_at, end_at) {
-    $scope.start_at = new Date();
-    $scope.end_at = end_at;
+    $scope.start_at = {
+        date: start_at,
+        opened: false,
+        open: function($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
 
-    $scope.opened = false;
+            $scope.start_at.opened = true;
+        }
+    };
 
+    $scope.end_at = {
+        date: end_at,
+        opened: false,
+        open: function ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+
+            $scope.end_at.opened = true;
+        }
+    };
+   
     $scope.ok = function() {
-        $modalInstance.close();
+        $modalInstance.close({
+            start: $scope.start_at.date,
+            end: $scope.end_at.date
+        });
     };
     $scope.cancel = function() {
         $modalInstance.dismiss('cancel');
     };
-
-    $scope.open = function ($event) {        
-        $event.preventDefault();
-        $event.stopPropagation();
-        
-        $scope.opened = true;
-        console.log('.');
-    };
-
+   
     $scope.dateOptions = {
         formatYear: 'yy',
         startingDay: 1,

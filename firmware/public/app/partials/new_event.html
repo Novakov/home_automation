@@ -1,23 +1,54 @@
 ﻿<div class="modal-header">
     <h3 class="modal-title">New event</h3>
 </div>
-<div class="modal-body">   
+<div class="modal-body">  
+    <div class="row">
+        <div>
+            <label>Start at</label>
+        </div>
+    </div> 
     <div class="row">
         <div class="col-lg-8">
             <div class="input-group">
-                <input type="text" class="form-control"
+                <input type="text" class="form-control input-sm"
                        datepicker-popup="yyyy-MM-dd"
-                       is-open="$parent.opened"
-                       ng-model="start_at"
+                       is-open="$parent.start_at.opened"
+                       ng-model="start_at.date"
                        datepicker-options="dateOptions"
                        show-button-bar="false" />
                 <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="start_at.open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>
             </div>
         </div>
         <div class="col-lg-4">
-            
+            <timepicker-pop input-time="start_at.date" class="input-group" disabled="disabled"
+                            show-meridian='showMeridian'></timepicker-pop>
+        </div>
+    </div>   
+    
+    <div class="row">
+        <div>
+            <label>End at</label>
+        </div>
+    </div> 
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="input-group">
+                <input type="text" class="form-control input-sm"
+                       datepicker-popup="yyyy-MM-dd"
+                       is-open="$parent.end_at.opened"
+                       ng-model="end_at.date"
+                       datepicker-options="dateOptions"
+                       show-button-bar="false" />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default btn-sm" ng-click="end_at.open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <timepicker-pop input-time="end_at.date" class="input-group" disabled="disabled"
+                            show-meridian='showMeridian'></timepicker-pop>
         </div>
     </div>       
 </div>

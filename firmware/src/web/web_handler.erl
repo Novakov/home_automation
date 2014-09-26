@@ -80,8 +80,8 @@ handle(Req, 'POST', ["events", "new"]) ->
   P = fun (Name) -> proplists:get_value(Name, Input) end,
   Event = domain_events:define_single_event(
     P(<<"target">>),
-    iso8601:parse(P(<<"from">>)),
-    iso8601:parse(P(<<"to">>))
+    calendar:universal_time_to_local_time(iso8601:parse(P(<<"from">>))),
+    calendar:universal_time_to_local_time(iso8601:parse(P(<<"to">>)))
   ),
 
   ok = domain_events:save_event(Event),

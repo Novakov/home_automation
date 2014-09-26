@@ -24,8 +24,7 @@
     "angular-ui-calendar": "0.8.1",   
     "angular-bootstrap": "0.11.0",
     "moment": "2.8.3",
-    "fullcalendar": "2.1.1",
-    "bootstrap-timepicker":  "0.2.6"
+    "fullcalendar": "2.1.1"   
   },
   "resolutions": {
     "jquery": "~2.x",
