@@ -99,8 +99,13 @@ handle(Req, 'POST', ["events", "new"]) ->
 
   json([{result, <<"OK">>}]);
 
-handle(Req, 'DELETE', ["event", EventId]) ->
+handle(_Req, 'DELETE', ["event", EventId]) ->
   ok = domain_events:delete_event(EventId),
+  json([{result, <<"OK">>}]);
+
+handle(_Req, 'DELETE', ["event", EventId, "occurence", Year, Month, Day]) ->
+  Date = {list_to_integer(Year), list_to_integer(Month), list_to_integer(Day)},
+  ok = domain_events:delete_event_occurence(EventId, Date),
   json([{result, <<"OK">>}]);
 
 handle(_,_,_) -> none.

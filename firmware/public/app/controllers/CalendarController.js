@@ -34,8 +34,31 @@ angular.module('HomeAutomation.Controllers')
         };
 
         $scope.deleteEvent = function (event) {
-            $http.delete('/event/' + event.id).success(function () {
-                $scope.calendar.fullCalendar('refetchEvents');
+            if (!event.event.isRecurring) {
+                $http.delete('/event/' + event.id).success(function () {
+                    $scope.calendar.fullCalendar('refetchEvents');
+                });
+                return;
+            }
+
+            $modal.open({
+                templateUrl: 'app/partials/delete_event_recurring.html',
+                controller: DeleteEventRecurringController,                
+            })
+            .result.then(function(result) {
+                switch(result) {
+                    case "occurence":
+                        var url = '/event/' + event.id + '/occurence/' + event.start.format('YYYY/M/DD');
+                        $http.delete(url).success(function() {
+                            $scope.calendar.fullCalendar('refetchEvents');
+                        });
+                        break;
+                    case "event":
+                        $http.delete('/event/' + event.id).success(function () {
+                            $scope.calendar.fullCalendar('refetchEvents');
+                        });
+                        break;
+                }
             });
         };
 
@@ -120,11 +143,7 @@ var NewEventController = function ($scope, $modalInstance, start_at, end_at) {
                 .filter(function (x) { return x.selected; })
                 .map(function (x) { return x.index; })
         });
-    };
-
-    $scope.test = function() {
-        alert($scope.isRecurring.value);
-    };
+    };   
 
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
@@ -139,4 +158,14 @@ var NewEventController = function ($scope, $modalInstance, start_at, end_at) {
     $scope.datePopupOptions = {
         "show-button-bar": false
     };
+};
+
+var DeleteEventRecurringController = function ($scope, $modalInstance) {
+    $scope.choose = function(result) {
+        $modalInstance.close(result);
+    };
+
+    $scope.cancel = function() {
+        $modalInstance.dismiss('cancel');
+    }
 };

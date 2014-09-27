@@ -1,7 +1,8 @@
 -module(domain_events).
 
 %% API
--export([define_single_event/3, define_recurring_event/4, save_event/1, get_events_for_date_range/2, delete_event/1, recurring_event_occurences/4, read_events/1]).
+-export([define_single_event/3, define_recurring_event/4, save_event/1, get_events_for_date_range/2, delete_event/1, delete_event_occurence/2]).
+-export([recurring_event_occurences/5, read_events/1, read_deleted_occurences/1]).
 
 -include("events.hrl").
 
@@ -17,6 +18,7 @@
 }).
 
 
+-record(deleted_occurence, {event_id :: number(), date :: {number(), number(), number()}}).
 
 -include_lib("emysql/include/emysql.hrl").
 
@@ -82,6 +84,8 @@ get_events_for_date_range(From, To) ->
 
   Events = read_events(Result),
 
+  DeletedEvents = read_deleted_occurences(emysql:execute(db, "SELECT * FROM deleted_recurring WHERE date BETWEEN ? AND ? ORDER BY date DESC", [From, To])),
+
   SingleEvents = [
     #event_occurence{series_id = E#event.id,
                      target = E#event.target,
@@ -93,7 +97,10 @@ get_events_for_date_range(From, To) ->
   ],
 
   RecurringEvents = [
-    recurring_event_occurences(E, utils:max_date(From, E#event.applicable_from), utils:min_date(To, E#event.applicable_to), [])
+    begin
+      Deleted = maps:get(E#event.id, DeletedEvents, []),
+      recurring_event_occurences(E, Deleted, utils:max_date(From, E#event.applicable_from), utils:min_date(To, E#event.applicable_to), [])
+    end
     || E <- Events, E#event.type =:= recurring
   ],
 
@@ -104,14 +111,20 @@ delete_event(EventId) ->
   1 = emysql:affected_rows(Result),
   ok.
 
-recurring_event_occurences(_, From, To, Acc) when From > To ->
+delete_event_occurence(EventId, Date) ->
+  emysql:execute(db, "INSERT INTO deleted_recurring(event_id, date) values(?,?)", [EventId, {Date, {0,0,0}}]),
+  ok.
+
+recurring_event_occurences(_Event, _Deleted, From, To, Acc) when From > To ->
   Acc;
-recurring_event_occurences(Event, From, To, Acc) ->
+recurring_event_occurences(Event, [DeletedDate|Deleted], From = {DeletedDate, _}, To, Acc) ->
+  recurring_event_occurences(Event, Deleted, utils:add_days(1, From), To, Acc);
+recurring_event_occurences(Event, Deleted, From, To, Acc) ->
   WeekDay = calendar:day_of_the_week(utils:date_part(From)),
   RecurreOnWeekDay = lists:any(fun(I)->I =:= WeekDay end, Event#event.definition#recurringEventDef.recurr_days),
 
   case RecurreOnWeekDay of
-    false -> recurring_event_occurences(Event, utils:add_days(1, From), To, Acc);
+    false -> recurring_event_occurences(Event, Deleted, utils:add_days(1, From), To, Acc);
 
     true ->
       Occurence = #event_occurence{
@@ -121,7 +134,7 @@ recurring_event_occurences(Event, From, To, Acc) ->
         to = {utils:date_part(From), utils:time_part(Event#event.definition#recurringEventDef.time_end)},
         isRecurring = true
       },
-      recurring_event_occurences(Event, utils:add_days(1, From), To, [Occurence|Acc])
+      recurring_event_occurences(Event, Deleted, utils:add_days(1, From), To, [Occurence|Acc])
   end.
 
 read_events(ResultPacket) ->
@@ -141,3 +154,12 @@ read_events(ResultPacket) ->
     || Row <- ResultPacket#result_packet.rows
   ].
 
+read_deleted_occurences(ResultPacket) ->
+  read_deleted_occurences(ResultPacket, ResultPacket#result_packet.rows, #{}).
+
+read_deleted_occurences(_ResultPacket, [], Map) -> Map;
+read_deleted_occurences(ResultPacket, [Row|Rows], Map) ->
+  Rec = utils:emysql_row_as_record(ResultPacket, Row, deleted_occurence, record_info(fields, deleted_occurence)),
+  EventId = Rec#deleted_occurence.event_id,
+  Deleted = [utils:date_part(Rec#deleted_occurence.date) | maps:get(EventId, Map, [])],
+  read_deleted_occurences(ResultPacket, Rows, maps:put(EventId, Deleted, Map)).
