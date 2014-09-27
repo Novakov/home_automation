@@ -35,15 +35,12 @@ angular.module('HomeAutomation.Controllers')
                     $scope.calendar.fullCalendar('refetchEvents');
                 });
             });
-        };
+        };       
 
-        $scope.isOpen = false;
-
-        $scope.test = function ($event, event) {
-            $event.stopPropagation();
-            $event.preventDefault();
-            console.log('Click on ');
-            console.log(event);
+        $scope.deleteEvent = function (event) {
+            $http.delete('/event/' + event.id).success(function() {
+                $scope.calendar.fullCalendar('refetchEvents');
+            });
         };
 
         $scope.eventRender = function (event, element, view) {

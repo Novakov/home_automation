@@ -88,4 +88,8 @@ handle(Req, 'POST', ["events", "new"]) ->
 
   json([{result, <<"OK">>}]);
 
+handle(Req, 'DELETE', ["event", EventId]) ->
+  ok = domain_events:delete_event(EventId),
+  json([{result, <<"OK">>}]);
+
 handle(_,_,_) -> none.

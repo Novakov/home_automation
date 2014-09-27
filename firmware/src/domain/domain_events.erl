@@ -1,7 +1,7 @@
 -module(domain_events).
 
 %% API
--export([define_single_event/3, define_recurring_event/6, save_event/1, get_events_for_date_range/2]).
+-export([define_single_event/3, define_recurring_event/6, save_event/1, get_events_for_date_range/2, delete_event/1]).
 
 -include("events.hrl").
 
@@ -75,7 +75,10 @@ get_events_for_date_range(From, To) ->
 
   SingleEvents.
 
-
+delete_event(EventId) ->
+  Result = emysql:execute(db, "DELETE FROM events WHERE id = ?", [EventId]),
+  1 = emysql:affected_rows(Result),
+  ok.
 
 read_events(ResultPacket) ->
  [
