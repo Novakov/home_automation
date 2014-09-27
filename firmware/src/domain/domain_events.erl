@@ -6,7 +6,7 @@
 -include("events.hrl").
 
 -record(singleEventDef, {start_at, end_at}).
--record(recurringEventDef, {time_start, time_end, weekDays}).
+-record(recurringEventDef, {time_start, time_end, recurr_days}).
 
 -record(event, {id :: number(),
                 target :: string(),
@@ -41,7 +41,7 @@ define_recurring_event(Target, From, To, Days) ->
     definition = #recurringEventDef{
       time_start = From,
       time_end = To,
-      weekDays = Days
+      recurr_days = Days
     }
   }.
 
@@ -61,8 +61,8 @@ save_event(Event) ->
         Event#event.definition#singleEventDef.end_at
       ];
     recurring ->
-      WeekDaysString = string:join(lists:map(fun(I)->erlang:integer_to_list(I) end, Event#event.definition#recurringEventDef.weekDays), ","),
-      DefinitionSql = "INSERT INTO recurring_event_definition(event_id, time_start, time_end, reccur_days) values(?, ?, ?, ?)",
+      WeekDaysString = lists:map(fun(I)->I + $0 end, Event#event.definition#recurringEventDef.recurr_days),
+      DefinitionSql = "INSERT INTO recurring_event_definition(event_id, time_start, time_end, recurr_days) values(?, ?, ?, ?)",
       DefinitionArgs = [
         Id,
         Event#event.definition#recurringEventDef.time_start,
@@ -81,8 +81,6 @@ get_events_for_date_range(From, To) ->
   Result = emysql:execute(db, SQL, [To, From]),
 
   Events = read_events(Result),
-
-  %error_logger:info_msg("Got events: ~p~n", [Events]),
 
   SingleEvents = [
     #event_occurence{series_id = E#event.id,
@@ -105,16 +103,24 @@ delete_event(EventId) ->
   1 = emysql:affected_rows(Result),
   ok.
 
-recurring_event_occurences(Event, From, To, Acc) when From > To ->
+recurring_event_occurences(_, From, To, Acc) when From > To ->
   Acc;
 recurring_event_occurences(Event, From, To, Acc) ->
-  Occurence = #event_occurence{
-    series_id = Event#event.id,
-    target = Event#event.target,
-    from = {utils:date_part(From), utils:time_part(Event#event.definition#recurringEventDef.time_start)},
-    to = {utils:date_part(From), utils:time_part(Event#event.definition#recurringEventDef.time_end)}
-  },
-  recurring_event_occurences(Event, utils:add_days(1, From), To, [Occurence|Acc]).
+  WeekDay = calendar:day_of_the_week(utils:date_part(From)),
+  RecurreOnWeekDay = lists:any(fun(I)->I =:= WeekDay end, Event#event.definition#recurringEventDef.recurr_days),
+
+  case RecurreOnWeekDay of
+    false -> recurring_event_occurences(Event, utils:add_days(1, From), To, Acc);
+
+    true ->
+      Occurence = #event_occurence{
+        series_id = Event#event.id,
+        target = Event#event.target,
+        from = {utils:date_part(From), utils:time_part(Event#event.definition#recurringEventDef.time_start)},
+        to = {utils:date_part(From), utils:time_part(Event#event.definition#recurringEventDef.time_end)}
+      },
+      recurring_event_occurences(Event, utils:add_days(1, From), To, [Occurence|Acc])
+  end.
 
 read_events(ResultPacket) ->
  [
@@ -123,7 +129,9 @@ read_events(ResultPacket) ->
 
       EventDef = case Event#event.type of
         <<"single">> -> utils:emysql_row_as_record(ResultPacket, Row, singleEventDef, record_info(fields, singleEventDef));
-        <<"recurring">> -> utils:emysql_row_as_record(ResultPacket, Row, recurringEventDef, record_info(fields, recurringEventDef))
+        <<"recurring">> ->
+          Def = utils:emysql_row_as_record(ResultPacket, Row, recurringEventDef, record_info(fields, recurringEventDef)),
+          Def#recurringEventDef{recurr_days = lists:map(fun(I) -> I - $0 end, binary_to_list(Def#recurringEventDef.recurr_days))}
       end,
 
       Event#event{definition = EventDef, type = binary_to_atom(Event#event.type, utf8)}
