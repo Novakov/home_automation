@@ -86,7 +86,8 @@ get_events_for_date_range(From, To) ->
     #event_occurence{series_id = E#event.id,
                      target = E#event.target,
                      from = E#event.definition#singleEventDef.start_at,
-                     to = E#event.definition#singleEventDef.end_at
+                     to = E#event.definition#singleEventDef.end_at,
+                     isRecurring = false
     }
     || E <- Events, E#event.type =:= single
   ],
@@ -117,7 +118,8 @@ recurring_event_occurences(Event, From, To, Acc) ->
         series_id = Event#event.id,
         target = Event#event.target,
         from = {utils:date_part(From), utils:time_part(Event#event.definition#recurringEventDef.time_start)},
-        to = {utils:date_part(From), utils:time_part(Event#event.definition#recurringEventDef.time_end)}
+        to = {utils:date_part(From), utils:time_part(Event#event.definition#recurringEventDef.time_end)},
+        isRecurring = true
       },
       recurring_event_occurences(Event, utils:add_days(1, From), To, [Occurence|Acc])
   end.

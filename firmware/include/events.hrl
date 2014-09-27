@@ -3,5 +3,6 @@
 -record(event_occurence, {series_id :: number(),
   from :: datetime(),
   to :: datetime(),
-  target :: string()
+  target :: string(),
+  isRecurring :: boolean()
 }).

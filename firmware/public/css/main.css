@@ -43,7 +43,9 @@
         display: block;
         padding-top: 4px;
     }
-
+        .fc-event .icons > span.glyphicon {
+            cursor: default;
+        }
         .fc-event .icons a {
             color: white !important;
             cursor: pointer;
@@ -59,3 +61,4 @@
     display: inline;
     padding-left: 10px;
 }
+

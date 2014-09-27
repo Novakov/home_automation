@@ -9,7 +9,7 @@ angular.module('HomeAutomation.Controllers')
                     id: e.series_id,
                     start: e.from,
                     end: e.to,
-                    icons: ['']
+                    event: e
                 }
             }
         };
@@ -99,15 +99,17 @@ var NewEventController = function ($scope, $modalInstance, start_at, end_at) {
         }
     };
 
-    $scope.isRecurring = { value: true };
+    $scope.isRecurring = { value: false };
 
     $scope.weekDays = moment.weekdays().map(function (day, idx) {
         return {
             name: day,
             selected: false,
-            index: idx
+            index: (idx - 7) % 7 + 7
         };
     });
+
+    $scope.weekDays.push($scope.weekDays.shift());
 
     $scope.ok = function () {
         $modalInstance.close({
