@@ -25,20 +25,16 @@ angular.module('HomeAutomation.Controllers')
             });
 
             modalInstance.result.then(function (event) {
-                var data = {
-                    from: event.start,
-                    to: event.end,
-                    target: "water"
-                };
+                event.target = "water";
 
-                $http.post('/events/new', data).success(function () {
+                $http.post('/events/new', event).success(function () {
                     $scope.calendar.fullCalendar('refetchEvents');
                 });
             });
-        };       
+        };
 
         $scope.deleteEvent = function (event) {
-            $http.delete('/event/' + event.id).success(function() {
+            $http.delete('/event/' + event.id).success(function () {
                 $scope.calendar.fullCalendar('refetchEvents');
             });
         };
@@ -46,7 +42,7 @@ angular.module('HomeAutomation.Controllers')
         $scope.eventRender = function (event, element, view) {
             var dropdownMenu = $templateCache.get('event-icons.html');
 
-            element.find(".fc-time span")               
+            element.find(".fc-time span")
                 .after(dropdownMenu);
 
             var scope = $scope.$new();
@@ -66,7 +62,7 @@ angular.module('HomeAutomation.Controllers')
                 selectable: true,
                 selectHelper: true,
                 columnFormat: {
-                    week: 'd.MM dddd'
+                    week: 'DD.MM dddd'
                 },
                 axisFormat: { 'agenda': 'H:mm' },
                 timeFormat: 'H:mm',
@@ -103,12 +99,31 @@ var NewEventController = function ($scope, $modalInstance, start_at, end_at) {
         }
     };
 
+    $scope.isRecurring = { value: true };
+
+    $scope.weekDays = moment.weekdays().map(function (day, idx) {
+        return {
+            name: day,
+            selected: false,
+            index: idx
+        };
+    });
+
     $scope.ok = function () {
         $modalInstance.close({
-            start: $scope.start_at.date,
-            end: $scope.end_at.date
+            from: $scope.start_at.date,
+            to: $scope.end_at.date,
+            is_recurring: $scope.isRecurring.value,
+            reccur_days: $scope.weekDays
+                .filter(function (x) { return x.selected; })
+                .map(function (x) { return x.index; })
         });
     };
+
+    $scope.test = function() {
+        alert($scope.isRecurring.value);
+    };
+
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };

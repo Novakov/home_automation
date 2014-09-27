@@ -78,11 +78,22 @@ handle(Req, 'GET', ["events"]) ->
 handle(Req, 'POST', ["events", "new"]) ->
   Input = jsx:decode(Req:recv_body()),
   P = fun (Name) -> proplists:get_value(Name, Input) end,
-  Event = domain_events:define_single_event(
-    P(<<"target">>),
-    calendar:universal_time_to_local_time(iso8601:parse(P(<<"from">>))),
-    calendar:universal_time_to_local_time(iso8601:parse(P(<<"to">>)))
-  ),
+
+  Event = case P(<<"is_recurring">>) of
+    true ->
+      domain_events:define_recurring_event(
+        P(<<"target">>),
+        calendar:universal_time_to_local_time(iso8601:parse(P(<<"from">>))),
+        calendar:universal_time_to_local_time(iso8601:parse(P(<<"to">>))),
+        P(<<"reccur_days">>)
+      );
+    false ->
+      domain_events:define_single_event(
+        P(<<"target">>),
+        calendar:universal_time_to_local_time(iso8601:parse(P(<<"from">>))),
+        calendar:universal_time_to_local_time(iso8601:parse(P(<<"to">>)))
+      )
+  end,
 
   ok = domain_events:save_event(Event),
 

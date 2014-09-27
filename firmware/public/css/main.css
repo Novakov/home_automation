@@ -36,17 +36,26 @@
 }
 
 .fc-event {
-    text-decoration: none !important;   
+    text-decoration: none !important;
 }
 
     .fc-event .icons {
         display: block;
-        padding-top: 4px;     
+        padding-top: 4px;
     }
-    
-    .fc-event .icons a {
-        color: white !important;
-        cursor: pointer;
-    }    
 
-    
+        .fc-event .icons a {
+            color: white !important;
+            cursor: pointer;
+        }
+
+
+.new-event .weekdays {
+    list-style-type: none;
+    padding-left: 0px;
+}
+
+.new-event .weekdays li {
+    display: inline;
+    padding-left: 10px;
+}

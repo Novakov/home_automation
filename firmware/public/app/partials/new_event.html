@@ -1,12 +1,12 @@
 ﻿<div class="modal-header">
     <h3 class="modal-title">New event</h3>
 </div>
-<div class="modal-body">  
+<div class="modal-body new-event">
     <div class="row">
         <div>
             <label>Start at</label>
         </div>
-    </div> 
+    </div>
     <div class="row">
         <div class="col-lg-8">
             <div class="input-group">
@@ -25,13 +25,13 @@
             <timepicker-pop input-time="start_at.date" class="input-group" disabled="disabled"
                             show-meridian='showMeridian'></timepicker-pop>
         </div>
-    </div>   
-    
+    </div>
+
     <div class="row">
         <div>
             <label>End at</label>
         </div>
-    </div> 
+    </div>
     <div class="row">
         <div class="col-lg-8">
             <div class="input-group">
@@ -50,9 +50,25 @@
             <timepicker-pop input-time="end_at.date" class="input-group" disabled="disabled"
                             show-meridian='showMeridian'></timepicker-pop>
         </div>
-    </div>       
+    </div>
+    <div class="row">
+        <label>
+            <input type="checkbox" ng-model="isRecurring.value" />
+            Recurring
+        </label>
+    </div>
+    <div class="row" ng-show="isRecurring.value">
+        <h4>Repeat on:</h4>
+        
+        <ul class="weekdays">
+            <li ng-repeat="day in weekDays">
+                <label><input type="checkbox" ng-model="day.selected"/>{{day.name}}</label>
+            </li>
+        </ul>        
+    </div>   
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="ok()">OK</button>
     <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-warning" ng-click="test()">test</button>
 </div>
