@@ -1,7 +1,7 @@
 ﻿'use strict';
 
 angular.module('HomeAutomation.Controllers')
-    .controller('CalendarController', function ($scope, $http, $modal) {
+    .controller('CalendarController', function ($scope, $http, $modal, $templateCache, $compile) {
         $scope.eventSources = {
             url: '/events',
             eventDataTransform: function (e) {
@@ -29,26 +29,34 @@ angular.module('HomeAutomation.Controllers')
                     from: event.start,
                     to: event.end,
                     target: "water"
-                };                
+                };
 
-                $http.post('/events/new', data).success(function() {
+                $http.post('/events/new', data).success(function () {
                     $scope.calendar.fullCalendar('refetchEvents');
                 });
             });
         };
 
+        $scope.isOpen = false;
+
+        $scope.test = function ($event, event) {
+            $event.stopPropagation();
+            $event.preventDefault();
+            console.log('Click on ');
+            console.log(event);
+        };
+
         $scope.eventRender = function (event, element, view) {
-            var html = '<span class="icons">';
+            var dropdownMenu = $templateCache.get('event-icons.html');
 
-            if (event.icons != undefined) {
-                for (var idx in event.icons) {
-                    html += '<span class="glyphicon glyphicon-' + event.icons[idx] + '"></span>';
-                }
-            }
+            element.find(".fc-time span")               
+                .after(dropdownMenu);
 
-            html += '</span>';
-            
-            element.find(".fc-time span").after($(html));
+            var scope = $scope.$new();
+            scope.event = event;
+            scope.x = 111;
+
+            $compile(element)(scope);
         };
 
         $scope.uiConfig = {
@@ -79,7 +87,7 @@ var NewEventController = function ($scope, $modalInstance, start_at, end_at) {
     $scope.start_at = {
         date: start_at,
         opened: false,
-        open: function($event) {
+        open: function ($event) {
             $event.preventDefault();
             $event.stopPropagation();
 
@@ -97,17 +105,17 @@ var NewEventController = function ($scope, $modalInstance, start_at, end_at) {
             $scope.end_at.opened = true;
         }
     };
-   
-    $scope.ok = function() {
+
+    $scope.ok = function () {
         $modalInstance.close({
             start: $scope.start_at.date,
             end: $scope.end_at.date
         });
     };
-    $scope.cancel = function() {
+    $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
-   
+
     $scope.dateOptions = {
         formatYear: 'yy',
         startingDay: 1,
@@ -115,6 +123,6 @@ var NewEventController = function ($scope, $modalInstance, start_at, end_at) {
     };
 
     $scope.datePopupOptions = {
-        "show-button-bar":false
+        "show-button-bar": false
     };
 };

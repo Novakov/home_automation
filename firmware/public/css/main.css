@@ -28,15 +28,25 @@
 .event {
     background-color: red;
     z-index: 1;
-    position: absolute;    
+    position: absolute;
+}
+
+.fc-time-grid .fc-event {
+    cursor: move;
 }
 
 .fc-event {
-    text-decoration: none !important;
+    text-decoration: none !important;   
 }
 
-.fc-event .icons {
-    float: right;
-    padding-right: 2px;
-    padding-top: 2px;
-}
+    .fc-event .icons {
+        display: block;
+        padding-top: 4px;     
+    }
+    
+    .fc-event .icons a {
+        color: white !important;
+        cursor: pointer;
+    }    
+
+    
