@@ -6,11 +6,19 @@
   {applications, [
                   kernel,
                   stdlib,
-                  sasl
+                  sasl,
+                  crypto,
+                  emysql,
+                  mochiweb,
+                  gproc,
+                  jsx,
+                  iso8601,
+                  os_mon
                  ]},
   {mod, { home_automation_app, []}},
   {env, [
-    {modes, [hw, web]}],
+    {modes, [hw, web]},
     {dbserver, "localhost"}
+    ]
   }
  ]}.

@@ -13,6 +13,4 @@
 -export([start/0]).
 
 start() ->
-  application:start(crypto),
-  application:start(emysql),
-  application:start(home_automation).
+  application:ensure_all_started(home_automation).

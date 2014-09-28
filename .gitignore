@@ -3,6 +3,7 @@
 erl_crash.dump
 
 
+firmware/_rel
 firmware/.idea
 firmware/.rebar
 firmware/ebin

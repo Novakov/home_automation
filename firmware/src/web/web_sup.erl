@@ -12,7 +12,7 @@
 -behaviour(supervisor).
 
 %% API
--export([start_link/0]).
+-export([start_link/0, public_dir/0]).
 
 %% Supervisor callbacks
 -export([init/1]).
@@ -59,7 +59,7 @@ init([]) ->
   WebConfig = [
     {ip, {0,0,0,0}},
     {port, 8088},
-    {docroot, "./public"}
+    {docroot, public_dir()}
   ],
   {ok,
     {
@@ -74,6 +74,14 @@ init([]) ->
       ]
     }
   }.
+
+public_dir() ->
+  {ok, AppName} = application:get_application(),
+  Priv = case code:priv_dir(AppName) of
+           {error, _} -> "priv";
+           X -> X
+         end,
+  Priv ++ "/public".
 
 %%%===================================================================
 %%% Internal functions

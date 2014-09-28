@@ -21,5 +21,5 @@ view(ViewModule, Parameters) ->
 
 file(FileName) ->
   fun(Req) ->
-    Req:serve_file(FileName, "./public")
+    Req:serve_file(FileName, web_sup:public_dir())
   end.
