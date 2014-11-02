@@ -6,7 +6,7 @@
 %% API Function Exports
 %% ------------------------------------------------------------------
 
--export([start_link/0, green_led/1, green_led/0]).
+-export([start_link/0, green_led/1, green_led/0, temperature/0]).
 
 %% ------------------------------------------------------------------
 %% gen_server Function Exports
@@ -37,6 +37,10 @@ green_led(on) ->
 
 green_led(off) ->
   gen_server:call({global, ?SERVER}, {green_led, off}).
+
+temperature() ->
+  gen_server:call({global, ?SERVER}, {temperature, ask}).
+
 %% ------------------------------------------------------------------
 %% gen_server Function Definitions
 %% ------------------------------------------------------------------
@@ -52,6 +56,10 @@ handle_call({green_led, ask}, _From, State) ->
 handle_call({green_led, LedState}, _From, State) ->
     gpio:write(?GREEN_LED_PIN, onOff(LedState)),
     {reply, ok, State};
+
+handle_call({temperature, ask}, _From, State) ->
+  {ok, Temperature} = ds18b20:read_temperature("/sys/bus/w1/devices/28-00044eff2dff/w1_slave"),
+  {reply, Temperature, State};
 
 handle_call({low, Pin}, _From, State) ->
     gpio:write(Pin, 0),

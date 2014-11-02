@@ -11,5 +11,6 @@ angular.module('HomeAutomation', ['HomeAutomation.Controllers', 'ngRoute'])
             .when('/led', { templateUrl: 'app/partials/led.html', controller: 'LedController' })
             .when('/status', { templateUrl: 'app/partials/status.html', controller: 'StatusController' })
             .when('/calendar', { templateUrl: 'app/partials/calendar.html', controller: 'CalendarController' })
+            .when('/temperature', { templateUrl: 'app/partials/temperature.html', controller: 'TemperatureController' })
             .otherwise({ redirectTo: '/led' });       
     });

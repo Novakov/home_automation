@@ -17,6 +17,7 @@
                 <li ng-class="{active: isActive('/led')}"><a href="#led">Green LED</a></li>
                 <li ng-class="{active: isActive('/status')}"><a href="#status">Status</a></li>
                 <li ng-class="{active: isActive('/calendar')}"><a href="#calendar">Calendar</a></li>
+                <li ng-class="{active: isActive('/temperature')}"><a href="#temperature">Temperature</a></li>
             </ul>
             <div id="view" class="tab-content tab" ng-view>                
             </div>
@@ -42,6 +43,7 @@
     <script src="app/controllers/StatusController.js"></script>    
     <script src="app/controllers/CornerController.js"></script>    
     <script src="app/controllers/CalendarController.js"></script>    
+    <script src="app/controllers/TemperatureController.js"></script>    
     <script src="app/app.js"></script>
 </body>
 </html>

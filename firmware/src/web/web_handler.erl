@@ -108,4 +108,8 @@ handle(_Req, 'DELETE', ["event", EventId, "occurence", Year, Month, Day]) ->
   ok = domain_events:delete_event_occurence(EventId, Date),
   json([{result, <<"OK">>}]);
 
+handle(_Req, 'GET', ["temperature"]) ->
+  Temp = hw_interface:temperature(),
+  json([{temperature, Temp}]);
+
 handle(_,_,_) -> none.
