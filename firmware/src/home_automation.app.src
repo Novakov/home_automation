@@ -13,7 +13,8 @@
                   gproc,
                   jsx,
                   iso8601,
-                  os_mon
+                  os_mon,
+                  erlcron
                  ]},
   {mod, { home_automation_app, []}},
   {env, [

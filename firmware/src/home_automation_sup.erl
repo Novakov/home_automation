@@ -25,7 +25,13 @@ child_specs([hw|Rest]) ->
            {hw_interface_sup, start_link, []},
            permanent, 5000, supervisor, [hw_interface_sup]
          },
-  [HwInterfaceSpec|child_specs(Rest)];
+
+  DumpStatusSpec = {dump_status,
+           {dump_status, start_link, []},
+           permanent, 5000, worker, [dump_status]
+  },
+
+  [HwInterfaceSpec|[DumpStatusSpec|child_specs(Rest)]];
 
 child_specs([web|Rest]) ->
   WebSpec = {web_sup,
