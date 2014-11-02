@@ -11,4 +11,4 @@ firmware/ebin
 
 !firmware/deps/erlhw/ebin
 
-firmware/public/components
+firmware/priv/public/components

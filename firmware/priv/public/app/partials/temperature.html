@@ -1,3 +1,16 @@
 ﻿<p>
     Current temperature: {{ currentTemperature }}
 </p>
+
+  <!--xaxistickformat="xAxisTickFormatFunction()"
+                 yaxistickformat="yAxisTickFormatFunction()"-->
+
+<nvd3-line-chart data="temperatures"
+                 objectequality="true"
+                 id="temperaturesChart"                 
+                 height="550"
+                 showxaxis="true"
+                 showyaxis="true"
+                 xaxistickformat="xAxisTickFormatFunction()">
+    <svg></svg>
+</nvd3-line-chart>

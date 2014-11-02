@@ -21,13 +21,15 @@
     "bootstrap": "3.2.0",
     "angular": "1.2.25",
     "angular-route": "1.2.25",
-    "angular-ui-calendar": "0.8.1",   
+    "angular-ui-calendar": "0.8.1",
     "angular-bootstrap": "0.11.0",
     "moment": "2.8.3",
-    "fullcalendar": "2.1.1"   
+    "fullcalendar": "2.1.1",
+    "angularjs-nvd3-directives": "0.0.7"
   },
   "resolutions": {
     "jquery": "~2.x",
-    "fullcalendar": "2.1.1"
+    "fullcalendar": "2.1.1",
+    "d3": "3.4.13"
   }
 }
