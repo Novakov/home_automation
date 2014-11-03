@@ -2,6 +2,8 @@
 -behaviour(gen_server).
 -define(SERVER, ?MODULE).
 
+-record(state, {temperature=unknown}).
+
 %% ------------------------------------------------------------------
 %% API Function Exports
 %% ------------------------------------------------------------------
@@ -47,7 +49,10 @@ temperature() ->
 
 init(Args) ->
     ok = gpio:set_int(?BTN_PIN, rising),
-    {ok, Args}.
+
+    timer:send_interval(1000, read_temperature),
+
+    {ok, #state{}}.
 
 handle_call({green_led, ask}, _From, State) ->
   Status = gpio:read(?GREEN_LED_PIN),
@@ -57,8 +62,8 @@ handle_call({green_led, LedState}, _From, State) ->
     gpio:write(?GREEN_LED_PIN, onOff(LedState)),
     {reply, ok, State};
 
-handle_call({temperature, ask}, _From, State) ->
-  {ok, Temperature} = ds18b20:read_temperature("/sys/bus/w1/devices/28-00044eff2dff/w1_slave"),
+handle_call({temperature, ask}, _From, State = #state{temperature = Temperature}) ->
+  %{ok, Temperature} = ds18b20:read_temperature("/sys/bus/w1/devices/28-00044eff2dff/w1_slave"),
   {reply, Temperature, State};
 
 handle_call({low, Pin}, _From, State) ->
@@ -68,12 +73,27 @@ handle_call({low, Pin}, _From, State) ->
 handle_call(Msg, _From, State) ->
   {reply, {unk, Msg}, State}.
 
+handle_cast({temperature, update, Temperature}, State) ->
+  {noreply, State#state{temperature = Temperature}};
+
 handle_cast(_Msg, State) ->
     {noreply, State}.
 
 handle_info({gpio_interrupt,?BTN_PIN, rising}, _State) ->
   error_logger:info_msg("Rising edge!"),
   {noreply, _State};
+
+handle_info(read_temperature, State) ->
+  F = fun()->
+    {ok, Temperature} = ds18b20:read_temperature("/sys/bus/w1/devices/28-00044eff2dff/w1_slave"),
+
+    gen_server:cast({global, ?SERVER}, {temperature, update, Temperature})
+  end,
+
+  spawn(F),
+
+  {noreply, State};
+
 handle_info(_Info, State) ->
   error_logger:info_msg("Unknown msg ~p!", [_Info]),
     {noreply, State}.

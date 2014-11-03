@@ -59,8 +59,7 @@
         };
 
         $scope.xAxisTickFormatFunction = function () {
-            return function (d) {
-                console.log(moment(d));
+            return function (d) {               
                 return d3.time.format('%y.%m.%d - %H:%M:%S')(new Date(d));
             }
         };
