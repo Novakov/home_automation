@@ -1,7 +1,7 @@
 -module(utils).
 
 %% API
--export([record_as_proplist/2, rewrite_datetime_in_proplist/1, date_part/1, time_part/1, emysql_as_map/1, emysql_row_as_record/4, add_days/2, min_date/2, max_date/2]).
+-export([record_as_proplist/2, rewrite_datetime_in_proplist/1, date_part/1, time_part/1, emysql_as_map/1, emysql_row_as_record/4, add_days/2, min_date/2, max_date/2, emysql_decode/1]).
 
 -include_lib("emysql/include/emysql.hrl").
 

@@ -112,4 +112,14 @@ handle(_Req, 'GET', ["temperature"]) ->
   Temp = hw_interface:temperature(),
   json([{temperature, Temp}]);
 
+handle(Req, 'GET', ["temperature", "history"]) ->
+  QS = Req:parse_qs(),
+
+  From = calendar:universal_time_to_local_time(iso8601:parse(proplists:get_value("from", QS))),
+  To = calendar:universal_time_to_local_time(iso8601:parse(proplists:get_value("to", QS))),
+
+  Temperatures = domain_measures:get_temperatures_between_dates(From, To),
+
+  json(Temperatures);
+
 handle(_,_,_) -> none.

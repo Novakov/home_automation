@@ -1,0 +1,60 @@
+﻿<div class="container-fluid">
+    Select date time range:
+    <div class="row">
+        <div class=" col-lg-2">
+            <div class="input-group">
+                <input type="text" class="form-control input-sm"
+                       datepicker-popup="yyyy-MM-dd"
+                       is-open="from.opened"
+                       ng-model="from.date"
+                       datepicker-options="dateOptions"
+                       show-button-bar="false" />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default btn-sm" ng-click="from.open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <timepicker-pop input-time="from.date" class="input-group"
+                            show-meridian='showMeridian'></timepicker-pop>
+        </div>
+        
+        <div class=" col-lg-2">
+            <div class="input-group">
+                <input type="text" class="form-control input-sm"
+                       datepicker-popup="yyyy-MM-dd"
+                       is-open="to.opened"
+                       ng-model="to.date"
+                       datepicker-options="dateOptions"
+                       show-button-bar="false" />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default btn-sm" ng-click="to.open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <timepicker-pop input-time="to.date" class="input-group"
+                            show-meridian='showMeridian'></timepicker-pop>
+        </div>
+        
+        <div>
+            <button class="btn btn-success btn-sm" ng-click="showForDateRange()">Show</button>
+        </div>
+    </div>
+</div>
+
+<nvd3-line-chart data="temperatures"
+                 objectequality="true"
+                 id="temperaturesChart"
+                 height="450"
+                 showxaxis="true"
+                 showyaxis="true"
+                 xaxistickformat="xAxisTickFormatFunction()"
+                 xaxisrotatelabels="-45"
+                 margin="{bottom:130}"
+                 interactive="true"
+                 useinteractiveguideline="true"
+                 tooltips="true"
+                 >
+    <svg></svg>
+</nvd3-line-chart>

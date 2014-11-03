@@ -15,9 +15,13 @@ start(_StartType, _StartArgs) ->
 
     error_logger:info_msg("Running with modes ~p and dbserver ~p~n", [Modes, DbServer]),
 
-    ok = emysql:add_pool(db, 1, "root", "root", DbServer, 3306, "home_automation", utf8),
+    ok = emysql:add_pool(db, 1, "root", "root", ensure_list(DbServer), 3306, "home_automation", utf8),
 
     home_automation_sup:start_link(Modes).
 
 stop(_State) ->
     ok.
+
+
+ensure_list(List) when is_list(List) -> List;
+ensure_list(Atom) when is_atom(Atom) -> atom_to_list(Atom).
